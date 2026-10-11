@@ -16,6 +16,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: "hostpoint doc.fortysix.ch"
     steps:
       - name: Checkout
         uses: actions/checkout@v4

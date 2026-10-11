@@ -105,6 +105,11 @@ tbody tr:last-child td{border-bottom:0}
 .mchip:hover{border-color:var(--accent)}
 .mchip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .none{color:var(--muted);font-size:13px}
+.sechead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.extlink{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+.extlink:hover{border-bottom-width:2px}
+footer a{color:inherit;text-decoration:underline}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 footer{font-size:13px;color:var(--muted);max-width:75ch}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
@@ -143,11 +148,12 @@ footer{font-size:13px;color:var(--muted);max-width:75ch}
   </div>
 
   <section class="sheets" aria-labelledby="sheets-h">
-    <h2 id="sheets-h">Welche Platte für was?</h2>
+    <div class="sechead"><h2 id="sheets-h">Welche Platte für was?</h2>
+      <a class="extlink" href="https://help.prusa3d.com/materials" target="_blank" rel="noopener">Offizielle Prusa-Materialtabelle ↗</a></div>
     <div class="sheetgrid" id="sheetgrid"></div>
   </section>
 
-  <footer>Richtwerte für Standardfilamente; Hersteller-Angaben auf der Spule haben Vorrang. Die Bewertungen sind grobe Einordnungen, keine Messwerte. Platten-Empfehlungen nach Prusa-Hilfeartikeln zu den Druckblechen. Alle Bleche nie mit Aceton reinigen. Faserverstärkte Varianten unterscheiden sich je nach Basismaterial (PLA-CF, PETG-CF, PA-CF) deutlich.</footer>
+  <footer>Richtwerte für Standardfilamente; Hersteller-Angaben auf der Spule haben Vorrang. Die Bewertungen sind grobe Einordnungen, keine Messwerte. Platten-Empfehlungen nach Prusa-Hilfeartikeln zu den Druckblechen; verbindlich ist die <a href="https://help.prusa3d.com/materials" target="_blank" rel="noopener">Prusa-Materialtabelle</a>. Alle Bleche nie mit Aceton reinigen. Faserverstärkte Varianten unterscheiden sich je nach Basismaterial (PLA-CF, PETG-CF, PA-CF) deutlich.</footer>
 </div>
 
 <script>

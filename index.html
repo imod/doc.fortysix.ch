@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>doc.fortysix.ch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#16191f; --muted:#5b6270; --line:#d9dce2; --accent:#e2621b;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#12151a; --surface:#1b1f26; --ink:#eceef2; --muted:#9aa1ad; --line:#2d333d; --accent:#f07a35; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+main{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:48px;display:flex;flex-direction:column;gap:32px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(36px,6vw,56px);line-height:1;margin:6px 0 0}
+.lede{color:var(--muted);margin:8px 0 0;max-width:60ch}
+h2{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+a.card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.spool{width:26px;height:26px;border-radius:50%;background:var(--accent);box-shadow:inset 0 0 0 7px color-mix(in srgb,#000 18%,transparent)}
+.card b{font-family:var(--f-display);font-size:24px;line-height:1.1;display:block}
+.card span{color:var(--muted);font-size:14px}
+.arr{font-size:20px;color:var(--accent)}
+footer{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">doc.fortysix.ch</p>
+    <h1>3D-Druck Wissen</h1>
+    <p class="lede">Notizen und Nachschlagewerke rund um den 3D-Druck mit der Prusa CORE One+.</p>
+  </header>
+  <section>
+    <h2>Seiten</h2>
+    <ul>
+      <li><a class="card" href="filament-kompass.html">
+        <span class="spool" aria-hidden="true"></span>
+        <div><b>Filament-Kompass</b><span>Filamente im Vergleich: Eigenschaften, Druckparameter, passende Druckplatte</span></div>
+        <span class="arr" aria-hidden="true">→</span>
+      </a></li>
+    </ul>
+  </section>
+  <footer>fortysix.ch</footer>
+</main>
+</body>
+</html>

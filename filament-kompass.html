@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Filament-Kompass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: Werkstatt-Datenblatt. Oben Anwendungs-Wähler, darunter sortierbare Vergleichsmatrix links, Detailblatt rechts (mobil gestapelt). */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#16191f; --muted:#5b6270; --line:#d9dce2;
+  --accent:#e2621b; --accent-ink:#ffffff; --hi:#fff1e8; --dot-off:#dfe2e8;
+  --warn:#b45309; --ok:#15803d;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12151a; --surface:#1b1f26; --ink:#eceef2; --muted:#9aa1ad; --line:#2d333d;
+  --accent:#f07a35; --accent-ink:#16191f; --hi:#2c2118; --dot-off:#353b46; --warn:#f59e0b; --ok:#4ade80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12151a; --surface:#1b1f26; --ink:#eceef2; --muted:#9aa1ad; --line:#2d333d;
+  --accent:#f07a35; --accent-ink:#16191f; --hi:#2c2118; --dot-off:#353b46; --warn:#f59e0b; --ok:#4ade80; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:28px 48px;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,5vw,52px);line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0;letter-spacing:.02em;text-transform:uppercase}
+.uses{display:flex;flex-direction:column;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 13px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip:focus-visible,th button:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.usehint{font-size:14px;color:var(--muted);min-height:1.5em;margin:0}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:minmax(0,1fr)}}
+.tablebox{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:720px;font-variant-numeric:tabular-nums}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface);position:sticky;top:0}
+th button{all:unset;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+th button:hover{color:var(--ink)}
+th .arr{color:var(--accent)}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:color-mix(in srgb,var(--hi) 60%,transparent)}
+tbody tr.sel td{background:var(--hi)}
+tbody tr.dim{opacity:.35}
+tbody tr:last-child td{border-bottom:0}
+.mat{display:flex;align-items:center;gap:10px}
+.spool{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 3px color-mix(in srgb,#000 18%,transparent)}
+.mname{font-family:var(--f-display);font-weight:700;font-size:19px;letter-spacing:.02em}
+.mono{font-family:var(--f-mono);font-size:13px}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:9px;height:9px;border-radius:2px;background:var(--dot-off)}
+.dots i.on{background:var(--ink)}
+.dots.moist i.on{background:var(--warn)}
+.yes{color:var(--warn);font-weight:700}
+.no{color:var(--muted)}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+@media (max-width:960px){.detail{position:static}}
+.dhead{display:flex;align-items:center;gap:12px}
+.dhead .spool{width:28px;height:28px;box-shadow:inset 0 0 0 7px color-mix(in srgb,#000 18%,transparent)}
+.dhead h3{font-family:var(--f-display);font-size:34px;line-height:1;margin:0}
+.dfull{color:var(--muted);font-size:14px;margin:2px 0 0}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.spec{background:var(--surface);padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.spec span{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.spec b{font-family:var(--f-mono);font-size:14px;font-weight:600}
+.dsec{display:flex;flex-direction:column;gap:6px}
+.dsec h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+.dsec p{margin:0}
+.dsec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.core{background:var(--hi);border-radius:4px;padding:12px 14px}
+.core h4{color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.plates{display:inline-flex;gap:4px}
+.pl{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:3px;border:1px solid var(--ink);color:var(--ink);white-space:nowrap}
+.sheetlist{list-style:none;padding:0!important;gap:0!important;border:1px solid var(--line);border-radius:4px}
+.sheetlist li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 10px;border-top:1px solid var(--line)}
+.sheetlist li:first-child{border-top:0}
+.sn{display:flex;flex-direction:column;min-width:0}
+.sn b{font-size:14px}.sn small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.rt{font-family:var(--f-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.r3 .rt{color:var(--ok);font-weight:600}.r3 .pl{background:var(--ink);color:var(--surface)}
+.r2 .rt{color:var(--muted)}
+.r1 .rt{color:var(--warn)}
+.r0{opacity:.45}.r0 .rt{color:var(--muted)}
+.sheets{display:flex;flex-direction:column;gap:12px}
+.sheetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.shead{display:flex;justify-content:space-between;align-items:center}
+.cnt{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.sheet h3{font-family:var(--f-display);font-size:24px;line-height:1;margin:0}
+.sheet p{margin:0;font-size:13.5px;color:var(--muted)}
+.grp{display:flex;flex-direction:column;gap:4px}
+.grp>span{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.grp>div{display:flex;flex-wrap:wrap;gap:4px}
+.mchip{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:2px 8px;border-radius:999px;cursor:pointer}
+.mchip:hover{border-color:var(--accent)}
+.mchip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.none{color:var(--muted);font-size:13px}
+footer{font-size:13px;color:var(--muted);max-width:75ch}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">FDM · 1,75 mm · Prusa CORE One+</div>
+    <h1>Filament-Kompass</h1>
+    <p class="lede">Die gängigen Filamente im Vergleich: Eigenschaften, Druckparameter und wofür sie taugen. Wähle oben einen Einsatzzweck, sortiere die Tabelle per Klick auf eine Spalte und öffne ein Material für Details.</p>
+  </header>
+
+  <section class="uses" aria-labelledby="uses-h">
+    <h2 id="uses-h">Was willst du drucken?</h2>
+    <div class="chips" id="uses"></div>
+    <p class="usehint" id="usehint"></p>
+  </section>
+
+  <div class="main">
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+      <div class="tablebox">
+        <table>
+          <thead><tr id="thead"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="legend">
+        <span>Skala 1–5, relativ zueinander</span>
+        <span>Temperatur = Wärmeformbeständigkeit</span>
+        <span>Feuchte = wie stark das Material Wasser zieht</span>
+        <span>Preis: ● günstig · ●●● teuer</span>
+      </div>
+    </div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>
+
+  <section class="sheets" aria-labelledby="sheets-h">
+    <h2 id="sheets-h">Welche Platte für was?</h2>
+    <div class="sheetgrid" id="sheetgrid"></div>
+  </section>
+
+  <footer>Richtwerte für Standardfilamente; Hersteller-Angaben auf der Spule haben Vorrang. Die Bewertungen sind grobe Einordnungen, keine Messwerte. Platten-Empfehlungen nach Prusa-Hilfeartikeln zu den Druckblechen. Alle Bleche nie mit Aceton reinigen. Faserverstärkte Varianten unterscheiden sich je nach Basismaterial (PLA-CF, PETG-CF, PA-CF) deutlich.</footer>
+</div>
+
+<script>
+const M=[
+ {id:"PLA",full:"Polylactid",color:"#4f9d69",nozzle:"205–220",bed:"55–60",tg:"~60 °C",enc:"nein",
+  r:{str:4,tough:2,heat:1,uv:2,flex:1,ease:5},moist:2,price:1,
+  sum:"Der Standard. Steif, präzise, kaum Verzug und riecht nicht. Wird aber schon bei rund 55–60 °C weich.",
+  good:["Prototypen, Modelle, Figuren, Deko","Halterungen und Gehäuse für drinnen","Passgenaue Teile mit feinen Details"],
+  bad:["Teile im Auto oder an der Sonne","Spülmaschine, heisse Getränke","Teile, die sich biegen oder Schläge abfangen müssen"],
+  tips:["Glattes oder strukturiertes PEI-Blech, kein Kleber nötig","Bauteillüfter 100 %","Varianten: Silk (glänzend, schwächer), Matte, PLA+ / Tough PLA (zäher)"],
+  core:"Kammer nicht aufheizen lassen: Lüftungsklappe oben öffnen bzw. Tür einen Spalt offen. Sonst droht Heat-Creep und weiche Überhänge."},
+ {id:"PETG",full:"Polyethylenterephthalat-Glykol",color:"#3b82c4",nozzle:"230–250",bed:"80–90",tg:"~80 °C",enc:"optional",
+  r:{str:3,tough:4,heat:2,uv:3,flex:2,ease:4},moist:3,price:1,
+  sum:"Der Allrounder für Funktionsteile. Zäher und wärmebeständiger als PLA, chemisch robust, aber neigt zu Fäden.",
+  good:["Funktionsteile, Halterungen, Clips","Behälter, Werkstatt- und Haushaltsteile","Teile mit leichter Biegebelastung"],
+  bad:["Sehr feine Details (Stringing)","Dauerhafte UV-Belastung (besser ASA)","Hohe Temperaturen über ~75 °C"],
+  tips:["Haftet extrem auf glattem PEI: strukturiertes Blech oder Trennmittel","Bauteillüfter 30–50 %","Wird gerne vor dem Druck 4–6 h bei 65 °C getrocknet"],
+  core:"Kammer muss nicht geschlossen sein; leicht geöffnet funktioniert gut. Bei grossen Teilen hilft geschlossene Tür gegen Zugluft."},
+ {id:"ASA",full:"Acrylnitril-Styrol-Acrylat",color:"#d1a23a",nozzle:"255–265",bed:"100–110",tg:"~100 °C",enc:"ja",
+  r:{str:3,tough:4,heat:3,uv:5,flex:2,ease:3},moist:2,price:2,
+  sum:"Das Outdoor-Material. Mechanisch wie ABS, aber UV- und witterungsbeständig, vergilbt und versprödet kaum.",
+  good:["Teile für draussen: Garten, Balkon, Fahrzeug aussen","Gehäuse, die Sonne abbekommen","Autoteile im Innenraum"],
+  bad:["Drucker ohne Gehäuse","Lebensmittelkontakt","Räume ohne Lüftung (Dämpfe)"],
+  tips:["Bauteillüfter niedrig (0–20 %)","Kammer vorwärmen, Tür während des Drucks zu","Brim bei grossen, flachen Teilen"],
+  core:"Ideal für die geschlossene Kammer: vor dem Start einige Minuten vorheizen, Lüftungsklappe zu. Filter bzw. Raumlüftung wegen Styrol-Dämpfen."},
+ {id:"ABS",full:"Acrylnitril-Butadien-Styrol",color:"#8a8f99",nozzle:"250–260",bed:"100–110",tg:"~100 °C",enc:"ja",
+  r:{str:3,tough:4,heat:3,uv:2,flex:2,ease:2},moist:2,price:1,
+  sum:"Der Klassiker für hitzebeständige Teile. Zäh, gut nachbearbeitbar (Schleifen, Aceton-Glätten), aber verzugsanfällig.",
+  good:["Gehäuse für Elektronik","Teile in warmen Umgebungen","Teile, die man glätten oder kleben will"],
+  bad:["Dauerhaft im Freien (UV): dann ASA","Grosse flache Teile ohne Kammer","Lebensmittelkontakt"],
+  tips:["Lässt sich mit Acetondampf glätten und mit Aceton kleben","Bauteillüfter sehr niedrig","HIPS eignet sich als lösliches Stützmaterial"],
+  core:"Geschlossen drucken und die Kammer vorwärmen. Verzug ist bei der CORE One deutlich besser beherrschbar als offen. Dämpfe ablüften."},
+ {id:"TPU",full:"Thermoplastisches Polyurethan",color:"#c2417a",nozzle:"220–240",bed:"45–60",tg:"flexibel",enc:"nein",
+  r:{str:1,tough:5,heat:2,uv:3,flex:5,ease:2},moist:4,price:2,
+  sum:"Gummiartig und elastisch, meist Shore 95A. Sehr abriebfest, dämpft Stösse, druckt aber langsam.",
+  good:["Dämpfer, Füsse, Puffer, Dichtungen","Handyhüllen, Schutzkappen","Reifen, Griffe, flexible Scharniere"],
+  bad:["Steife oder massgenaue Teile","Schnelle Drucke","Teile mit vielen Rückzügen"],
+  tips:["Langsam drucken (etwa 20–40 mm/s volumetrisch begrenzt)","Rückzug minimal halten","Trocken lagern, zieht Feuchtigkeit"],
+  core:"Kammer offen lassen wie bei PLA. Weichere TPUs (85A und weniger) sind im Direktextruder machbar, aber noch langsamer zu drucken."},
+ {id:"PC",full:"Polycarbonat",color:"#6ab0c9",nozzle:"270–290",bed:"110–120",tg:"~145 °C",enc:"ja",
+  r:{str:5,tough:5,heat:5,uv:3,flex:2,ease:1},moist:4,price:2,
+  sum:"Sehr fest, schlagzäh und hitzebeständig. Anspruchsvoll: braucht hohe Temperaturen und verzieht stark.",
+  good:["Hoch belastete technische Teile","Teile nahe an Wärmequellen","Transparente, robuste Abdeckungen"],
+  bad:["Einsteiger-Drucke","Grosse Teile ohne gute Haftung","Feuchtes Filament (Blasen, Schwäche)"],
+  tips:["Vorher gründlich trocknen","Haftmittel / Klebestift auf dem Blech","Leichter zu drucken: PC-Blends wie PC-ABS oder PC Blend"],
+  core:"Liegt am oberen Limit des Druckers (Düse bis 290 °C). Kammer lange vorheizen; ein PC-Blend ist meist die bessere Wahl."},
+ {id:"PA",full:"Polyamid (Nylon)",color:"#e8e3d4",nozzle:"260–290",bed:"90–110",tg:"~70–80 °C (nass niedriger)",enc:"ja",
+  r:{str:4,tough:5,heat:3,uv:3,flex:3,ease:2},moist:5,price:3,
+  sum:"Extrem zäh, verschleissfest und gleitfähig. Zieht aber sehr schnell Wasser und ändert dabei seine Eigenschaften.",
+  good:["Zahnräder, Lager, Gleitteile","Scharniere, Schnappverbindungen","Werkzeug- und Maschinenteile"],
+  bad:["Ungetrocknet drucken","Hohe Massgenauigkeit (Feuchte-Quellung)","Teile ohne Gehäuse"],
+  tips:["Immer trocknen und aus der Trockenbox drucken","Klebestift auf PEI","Gefüllte Varianten (PA-CF, PA-GF) verziehen weniger"],
+  core:"Geschlossen und vorgeheizt drucken. Direkt aus der Trockenbox führen, sonst knistert und blubbert es an der Düse."},
+ {id:"CF / GF",full:"Faserverstärkte Composites (PLA-, PETG-, PA-CF/GF)",color:"#3a3d44",nozzle:"je Basis +5–10",bed:"je Basis",tg:"je Basis, meist höher",enc:"je Basis",
+  r:{str:5,tough:3,heat:4,uv:4,flex:1,ease:3},moist:4,price:3,
+  sum:"Basis-Kunststoff mit Kohle- oder Glasfasern. Deutlich steifer, verzieht weniger, matte Oberfläche. Abrasiv!",
+  good:["Steife Strukturteile, Rahmen, Drohnen","Vorrichtungen und Lehren","Teile, die sich nicht verziehen dürfen"],
+  bad:["Messingdüse (wird in kurzer Zeit ausgeschliffen)","Teile, die sich biegen sollen","Sehr feine Düsen (0,25 mm verstopft)"],
+  tips:["Gehärtete Düse verwenden (z. B. ObXidian), 0,4 oder 0,6 mm","Schichthaftung oft schwächer als beim Basismaterial","Trocknen empfohlen, auch bei PLA-CF"],
+  core:"Kammer-Einstellung richtet sich nach dem Basismaterial: PLA-CF offen, PA-CF geschlossen und vorgeheizt."},
+ {id:"PP",full:"Polypropylen",color:"#b8c46a",nozzle:"230–250",bed:"80–100",tg:"~100 °C (weich)",enc:"empfohlen",
+  r:{str:2,tough:5,heat:3,uv:3,flex:4,ease:1},moist:1,price:2,
+  sum:"Leicht, chemisch fast unverwüstlich und ideal für Filmscharniere. Haftet aber auf kaum einer Druckplatte.",
+  good:["Filmscharniere, Deckel mit Klappe","Behälter für Chemikalien","Leichte, biegsame Teile"],
+  bad:["PEI-Bleche (haftet nicht)","Steife Teile","Kleben (kaum möglich)"],
+  tips:["Auf dem PP-Blech drucken, normale PEI-Bleche haften nicht","Grosser Brim","Stark schrumpfend, Masse kompensieren"],
+  core:"Geschlossene Kammer hilft gegen Verzug. Unbedingt das PP-Blech verwenden; auf PEI haftet PP praktisch nicht."},
+ {id:"HIPS",full:"High Impact Polystyrene",color:"#d9d2f2",nozzle:"230–245",bed:"100–110",tg:"~100 °C",enc:"ja",
+  r:{str:2,tough:3,heat:3,uv:2,flex:2,ease:3},moist:2,price:2,
+  sum:"Leichtes Material, vor allem bekannt als in Limonen auflösbares Stützmaterial für ABS.",
+  good:["Lösliche Stützen für ABS/ASA","Leichte Gehäuse und Modelle","Teile zum Bemalen"],
+  bad:["Stütze für PLA/PETG (Temperaturen passen nicht)","Belastete Teile","Outdoor"],
+  tips:["In D-Limonen auflösen (dauert Stunden)","Für Stützen ist ein Mehrmaterial-System nötig","Ähnliche Einstellungen wie ABS"],
+  core:"Druckt wie ABS: Kammer zu und vorheizen. Als Stützmaterial braucht es ein Mehrmaterial-Setup (z. B. MMU)."},
+ {id:"PVA / BVOH",full:"Wasserlösliche Stützmaterialien",color:"#9fd4c9",nozzle:"200–220",bed:"55–60",tg:"~60–80 °C",enc:"nein",
+  r:{str:1,tough:1,heat:1,uv:1,flex:2,ease:2},moist:5,price:3,
+  sum:"Stützmaterial, das sich in Wasser auflöst. Ermöglicht komplexe Geometrien ohne Stützspuren.",
+  good:["Stützen für PLA (PVA) bzw. PLA/PETG (BVOH)","Innenliegende Hohlräume, Überhänge","Bewegliche Print-in-Place-Teile"],
+  bad:["Eigenständige Teile","Feuchte Lagerung (wird klebrig, unbrauchbar)","Hochtemperatur-Materialien"],
+  tips:["Nur in Trockenbox lagern und drucken","Spart Material: nur die Kontaktschicht aus PVA drucken","Warmes, bewegtes Wasser löst schneller"],
+  core:"Braucht ein Mehrmaterial-System. Im Druckraum offen drucken wie PLA, Spule unbedingt trocken führen."}
+];
+const SHEETS=[
+ {k:"KM",code:"KM-25",name:"Glattes PEI",n:2,note:"Höchste Haftung, glänzende Unterseite. Nie TPU oder PETG ohne Klebestift: das Material kann Stücke aus der PEI-Schicht reissen."},
+ {k:"SK",code:"SK-25",name:"Strukturiert (Textured)",n:1,note:"Pulverbeschichtet, robust. Teile lösen sich nach dem Abkühlen fast von selbst. Unterseite mit Strukturmuster."},
+ {k:"BT",code:"BT-25",name:"Satin",n:1,note:"Allrounder mit feiner, matter Unterseite. PLA und PETG ohne Kleber; TPU nur mit Klebestift."},
+ {k:"LT",code:"LT-25",name:"PA Nylon",n:1,note:"Spezialblech für Polyamide (und PETG). Ohne Kleber drucken, nur mit Wasser und Spülmittel reinigen: kein Alkohol, kein Aceton, nicht kratzfest."},
+ {k:"MS",code:"MS-25",name:"PP",n:1,note:"Nur für Polypropylen und PP-CF. Andere Materialien haften nicht."}
+];
+// r: 3 = erste Wahl · 2 = geht · 1 = nur mit Klebestift / Vorsicht · 0 = nicht verwenden
+const PLATES={
+ "PLA":{KM:[3,"Beste Haftung, glatte Unterseite"],BT:[3,"Matte Unterseite, kein Kleber"],SK:[2,"Kleine Teile ev. mit Brim"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "PETG":{SK:[3,"Löst sich nach dem Abkühlen sauber"],BT:[3,"Ohne Kleber, glattere Unterseite"],LT:[2,"Von Prusa als kompatibel gelistet"],KM:[1,"Nur mit Klebestift als Trennschicht"],MS:[0,"Haftet nicht"]},
+ "ASA":{KM:[3,"Beste Haftung; bei grossen Flächen Klebestift"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Weniger Haftung: Brim, ev. Draft Shield"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "ABS":{KM:[3,"Beste Haftung; bei grossen Flächen Klebestift"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Weniger Haftung: Brim, ev. Draft Shield"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "TPU":{SK:[3,"Erste Wahl, löst sich gut"],BT:[1,"Nur mit Klebestift"],KM:[1,"Nur mit Klebestift, sonst reisst es PEI aus"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "PC":{SK:[3,"Mit Klebestift als Trennschicht"],KM:[2,"Mit Klebestift als Trennschicht"],BT:[2,"Brim; bei häufigem PC Klebestift"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "PA":{LT:[3,"Dafür gemacht, ohne Kleber"],SK:[2,"Mit Klebestift"],KM:[1,"Mit Klebestift, schwächere Haftung"],BT:[1,"Nur mit Klebestift, nicht empfohlen"],MS:[0,"Haftet nicht"]},
+ "CF / GF":{SK:[3,"PLA-CF, PETG-CF (PETG-CF mit Kleber auf PEI)"],LT:[3,"PA-CF / PA-GF ohne Kleber"],BT:[2,"PLA-CF, PETG-CF"],KM:[2,"PLA-CF; PETG-CF nur mit Klebestift"],MS:[2,"Nur PP-CF"]},
+ "PP":{MS:[3,"Dafür gemacht"],BT:[2,"Laut Prusa möglich, kleinere Teile"],SK:[0,"Haftet nicht"],KM:[0,"Haftet nicht"],LT:[0,"Haftet nicht"]},
+ "HIPS":{KM:[3,"Wie ABS, das Hauptmaterial bestimmt"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Brim empfohlen"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
+ "PVA / BVOH":{KM:[3,"Mit PLA: wie das Hauptmaterial"],BT:[3,"Mit PLA oder PETG"],SK:[2,"Mit PETG + BVOH"],LT:[0,"Nicht vorgesehen"],MS:[0,"Nicht vorgesehen"]}
+};
+const RL=["nicht","mit Kleber","geht","erste Wahl"];
+const bestSheets=id=>Object.entries(PLATES[id]).filter(([k,v])=>v[0]===3).map(([k])=>k);
+const COLS=[
+ {k:"str",l:"Festigkeit"},{k:"tough",l:"Zähigkeit"},{k:"heat",l:"Temperatur"},
+ {k:"uv",l:"UV / Wetter"},{k:"flex",l:"Flexibilität"},{k:"ease",l:"Druckbarkeit"},{k:"moist",l:"Feuchte"}
+];
+const USES=[
+ {l:"Deko & Prototypen",m:["PLA"],h:"PLA: günstig, präzise, einfach. Für robustere Prototypen PETG."},
+ {l:"Funktionsteile drinnen",m:["PETG","PLA","CF / GF"],h:"PETG ist der Allrounder; PLA reicht, wenn es weder warm wird noch Schläge abbekommt."},
+ {l:"Draussen & Sonne",m:["ASA","PETG"],h:"ASA ist erste Wahl für UV und Wetter; PETG geht für leichtere Fälle."},
+ {l:"Hitze & Auto",m:["ASA","PC","CF / GF","ABS"],h:"Im Auto werden über 70 °C erreicht: ASA, ABS oder für Extremfälle PC und PA-CF."},
+ {l:"Flexibel & dämpfend",m:["TPU"],h:"TPU für alles Gummiartige. Für Filmscharniere ist PP besser."},
+ {l:"Zahnräder & Verschleiss",m:["PA","CF / GF","PETG"],h:"Nylon gleitet und verschleisst kaum; PA-CF ist steifer."},
+ {l:"Scharniere & Chemikalien",m:["PP","PETG"],h:"PP für Filmscharniere und aggressive Medien; PETG als einfacher zu druckende Alternative."},
+ {l:"Lösliche Stützen",m:["PVA / BVOH","HIPS"],h:"PVA/BVOH lösen sich in Wasser (zu PLA/PETG), HIPS in Limonen (zu ABS/ASA). Braucht Mehrmaterial."}
+];
+let sel="PETG", use=null, sortK=null, sortDir=-1;
+try{const s=localStorage.getItem("fk-sel");if(s&&M.some(x=>x.id===s))sel=s}catch(e){}
+
+const dots=(n,cls="")=>`<span class="dots ${cls}" aria-label="${n} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;
+const val=(m,k)=>k==="moist"?m.moist:k==="price"?m.price:k==="name"?m.id:m.r[k];
+
+function renderUses(){
+  const box=document.getElementById("uses");
+  box.innerHTML=USES.map((u,i)=>`<button class="chip" id="use-${i}" aria-pressed="${use===i}" data-i="${i}">${u.l}</button>`).join("");
+  box.querySelectorAll("button").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;use=use===i?null:i;if(use!==null){sel=USES[use].m[0]}renderAll()});
+  document.getElementById("usehint").textContent=use===null?"":"Empfehlung: "+USES[use].h;
+}
+function renderHead(){
+  const cell=(k,l)=>`<th><button data-k="${k}">${l}${sortK===k?`<span class="arr">${sortDir<0?"▼":"▲"}</span>`:""}</button></th>`;
+  document.getElementById("thead").innerHTML=cell("name","Material")+'<th>Druckplatte</th><th>Düse °C</th><th>Bett °C</th><th>Gehäuse</th>'+COLS.map(c=>cell(c.k,c.l)).join("")+cell("price","Preis");
+  document.querySelectorAll("th button").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=k==="name"?1:-1}renderAll()});
+}
+function renderBody(){
+  let rows=[...M];
+  if(sortK)rows.sort((a,b)=>{const x=val(a,sortK),y=val(b,sortK);return (typeof x==="string"?x.localeCompare(y):x-y)*sortDir});
+  const match=use===null?null:USES[use].m;
+  document.getElementById("tbody").innerHTML=rows.map(m=>{
+    const enc=m.enc==="ja"?'<span class="yes">ja</span>':m.enc==="nein"?'<span class="no">nein</span>':m.enc;
+    return `<tr tabindex="0" data-id="${m.id}" class="${m.id===sel?"sel":""} ${match&&!match.includes(m.id)?"dim":""}">
+    <td><div class="mat"><span class="spool" style="background:${m.color}"></span><span class="mname">${m.id}</span></div></td>
+    <td><span class="plates">${bestSheets(m.id).map(k=>`<span class="pl">${SHEETS.find(x=>x.k===k).code}</span>`).join("")}</span></td>
+    <td class="mono">${m.nozzle}</td><td class="mono">${m.bed}</td><td>${enc}</td>
+    ${COLS.map(c=>`<td>${dots(val(m,c.k),c.k==="moist"?"moist":"")}</td>`).join("")}
+    <td class="mono">${"●".repeat(m.price)}<span style="color:var(--dot-off)">${"●".repeat(3-m.price)}</span></td></tr>`}).join("");
+  document.querySelectorAll("#tbody tr").forEach(tr=>{
+    const go=()=>{sel=tr.dataset.id;try{localStorage.setItem("fk-sel",sel)}catch(e){}renderBody();renderDetail();if(innerWidth<=960)document.getElementById("detail").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})};
+    tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}};
+  });
+}
+function renderDetail(){
+  const m=M.find(x=>x.id===sel);
+  const li=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  document.getElementById("detail").innerHTML=`
+   <div class="dhead"><span class="spool" style="background:${m.color}"></span><div><h3>${m.id}</h3><p class="dfull">${m.full}</p></div></div>
+   <p style="margin:0">${m.sum}</p>
+   <div class="specs">
+     <div class="spec"><span>Düse</span><b>${m.nozzle} °C</b></div>
+     <div class="spec"><span>Bett</span><b>${m.bed} °C</b></div>
+     <div class="spec"><span>Erweicht</span><b>${m.tg}</b></div>
+   </div>
+   <div class="dsec"><h4>Deine Druckplatten</h4>
+     <ul class="sheetlist">${SHEETS.map(sh=>({sh,v:PLATES[m.id][sh.k]})).sort((a,b)=>b.v[0]-a.v[0]).map(({sh,v})=>`<li class="r${v[0]}"><span class="pl">${sh.code}</span><span class="sn"><b>${sh.name}</b><small>${v[1]}</small></span><span class="rt">${RL[v[0]]}</span></li>`).join("")}</ul>
+   </div>
+   <div class="dsec"><h4>Gut für</h4>${li(m.good)}</div>
+   <div class="dsec"><h4>Eher nicht für</h4>${li(m.bad)}</div>
+   <div class="dsec"><h4>Drucktipps</h4>${li(m.tips)}</div>
+   <div class="dsec core"><h4>Auf der CORE One+</h4><p>${m.core}</p></div>`;
+}
+function renderSheets(){
+  document.getElementById("sheetgrid").innerHTML=SHEETS.map(sh=>{
+    const by=r=>M.filter(m=>PLATES[m.id][sh.k][0]===r).map(m=>`<button class="mchip" data-id="${m.id}">${m.id}</button>`).join("")||'<span class="none">–</span>';
+    return `<article class="sheet"><div class="shead"><span class="pl">${sh.code}</span>${sh.n>1?`<span class="cnt">${sh.n}×</span>`:""}</div>
+      <h3>${sh.name}</h3><p>${sh.note}</p>
+      <div class="grp"><span>Erste Wahl</span><div>${by(3)}</div></div>
+      <div class="grp"><span>Geht auch</span><div>${by(2)}</div></div>
+      <div class="grp"><span>Nur mit Klebestift</span><div>${by(1)}</div></div></article>`}).join("");
+  document.querySelectorAll(".mchip").forEach(b=>b.onclick=()=>{sel=b.dataset.id;renderBody();renderDetail();document.getElementById("detail").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"nearest"})});
+}
+function renderAll(){renderUses();renderHead();renderBody();renderDetail()}
+renderSheets();
+renderAll();
+</script>
+</body>
+</html>

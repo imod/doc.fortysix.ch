@@ -153,82 +153,82 @@ footer{font-size:13px;color:var(--muted);max-width:75ch}
     <div class="sheetgrid" id="sheetgrid"></div>
   </section>
 
-  <footer>Richtwerte für Standardfilamente; Hersteller-Angaben auf der Spule haben Vorrang. Die Bewertungen sind grobe Einordnungen, keine Messwerte. Platten-Empfehlungen nach Prusa-Hilfeartikeln zu den Druckblechen; verbindlich ist die <a href="https://help.prusa3d.com/materials" target="_blank" rel="noopener">Prusa-Materialtabelle</a>. Alle Bleche nie mit Aceton reinigen. Faserverstärkte Varianten unterscheiden sich je nach Basismaterial (PLA-CF, PETG-CF, PA-CF) deutlich.</footer>
+  <footer>Richtwerte für Standardfilamente; Hersteller-Angaben auf der Spule haben Vorrang. Die Bewertungen sind grobe Einordnungen, keine Messwerte. Temperaturen und Platten-Kompatibilität nach der offiziellen Prusa-Materialtabelle; die Einstufung «erste Wahl» ist eine eigene Empfehlung. Verbindlich ist die <a href="https://help.prusa3d.com/materials" target="_blank" rel="noopener">Prusa-Materialtabelle</a>. Alle Bleche nie mit Aceton reinigen. Faserverstärkte Varianten unterscheiden sich je nach Basismaterial (PLA-CF, PETG-CF, PA-CF) deutlich.</footer>
 </div>
 
 <script>
 const M=[
- {id:"PLA",full:"Polylactid",color:"#4f9d69",nozzle:"205–220",bed:"55–60",tg:"~60 °C",enc:"nein",
+ {id:"PLA",full:"Polylactid",color:"#4f9d69",nozzle:"185–235",bed:"50–60",tg:"~60 °C",enc:"nein",
   r:{str:4,tough:2,heat:1,uv:2,flex:1,ease:5},moist:2,price:1,
   sum:"Der Standard. Steif, präzise, kaum Verzug und riecht nicht. Wird aber schon bei rund 55–60 °C weich.",
   good:["Prototypen, Modelle, Figuren, Deko","Halterungen und Gehäuse für drinnen","Passgenaue Teile mit feinen Details"],
   bad:["Teile im Auto oder an der Sonne","Spülmaschine, heisse Getränke","Teile, die sich biegen oder Schläge abfangen müssen"],
   tips:["Glattes oder strukturiertes PEI-Blech, kein Kleber nötig","Bauteillüfter 100 %","Varianten: Silk (glänzend, schwächer), Matte, PLA+ / Tough PLA (zäher)"],
   core:"Kammer nicht aufheizen lassen: Lüftungsklappe oben öffnen bzw. Tür einen Spalt offen. Sonst droht Heat-Creep und weiche Überhänge."},
- {id:"PETG",full:"Polyethylenterephthalat-Glykol",color:"#3b82c4",nozzle:"230–250",bed:"80–90",tg:"~80 °C",enc:"optional",
+ {id:"PETG",full:"Polyethylenterephthalat-Glykol",color:"#3b82c4",nozzle:"215–270",bed:"70–90",tg:"~80 °C",enc:"optional",
   r:{str:3,tough:4,heat:2,uv:3,flex:2,ease:4},moist:3,price:1,
   sum:"Der Allrounder für Funktionsteile. Zäher und wärmebeständiger als PLA, chemisch robust, aber neigt zu Fäden.",
   good:["Funktionsteile, Halterungen, Clips","Behälter, Werkstatt- und Haushaltsteile","Teile mit leichter Biegebelastung"],
   bad:["Sehr feine Details (Stringing)","Dauerhafte UV-Belastung (besser ASA)","Hohe Temperaturen über ~75 °C"],
   tips:["Haftet extrem auf glattem PEI: strukturiertes Blech oder Trennmittel","Bauteillüfter 30–50 %","Wird gerne vor dem Druck 4–6 h bei 65 °C getrocknet"],
   core:"Kammer muss nicht geschlossen sein; leicht geöffnet funktioniert gut. Bei grossen Teilen hilft geschlossene Tür gegen Zugluft."},
- {id:"ASA",full:"Acrylnitril-Styrol-Acrylat",color:"#d1a23a",nozzle:"255–265",bed:"100–110",tg:"~100 °C",enc:"ja",
+ {id:"ASA",full:"Acrylnitril-Styrol-Acrylat",color:"#d1a23a",nozzle:"220–275",bed:"90–110",tg:"~100 °C",enc:"ja",
   r:{str:3,tough:4,heat:3,uv:5,flex:2,ease:3},moist:2,price:2,
   sum:"Das Outdoor-Material. Mechanisch wie ABS, aber UV- und witterungsbeständig, vergilbt und versprödet kaum.",
   good:["Teile für draussen: Garten, Balkon, Fahrzeug aussen","Gehäuse, die Sonne abbekommen","Autoteile im Innenraum"],
   bad:["Drucker ohne Gehäuse","Lebensmittelkontakt","Räume ohne Lüftung (Dämpfe)"],
-  tips:["Bauteillüfter niedrig (0–20 %)","Kammer vorwärmen, Tür während des Drucks zu","Brim bei grossen, flachen Teilen"],
+  tips:["Bauteillüfter niedrig (0–20 %)","Kammer vorwärmen, Tür während des Drucks zu","Satin-Blech ohne Kleber; auf PEI und strukturiert mit Klebestift"],
   core:"Ideal für die geschlossene Kammer: vor dem Start einige Minuten vorheizen, Lüftungsklappe zu. Filter bzw. Raumlüftung wegen Styrol-Dämpfen."},
- {id:"ABS",full:"Acrylnitril-Butadien-Styrol",color:"#8a8f99",nozzle:"250–260",bed:"100–110",tg:"~100 °C",enc:"ja",
+ {id:"ABS",full:"Acrylnitril-Butadien-Styrol",color:"#8a8f99",nozzle:"230–255",bed:"95–110",tg:"~100 °C",enc:"ja",
   r:{str:3,tough:4,heat:3,uv:2,flex:2,ease:2},moist:2,price:1,
   sum:"Der Klassiker für hitzebeständige Teile. Zäh, gut nachbearbeitbar (Schleifen, Aceton-Glätten), aber verzugsanfällig.",
   good:["Gehäuse für Elektronik","Teile in warmen Umgebungen","Teile, die man glätten oder kleben will"],
   bad:["Dauerhaft im Freien (UV): dann ASA","Grosse flache Teile ohne Kammer","Lebensmittelkontakt"],
-  tips:["Lässt sich mit Acetondampf glätten und mit Aceton kleben","Bauteillüfter sehr niedrig","HIPS eignet sich als lösliches Stützmaterial"],
+  tips:["Lässt sich mit Acetondampf glätten und mit Aceton kleben","Satin-Blech ohne Kleber; auf PEI und strukturiert mit Klebestift","HIPS eignet sich als lösliches Stützmaterial"],
   core:"Geschlossen drucken und die Kammer vorwärmen. Verzug ist bei der CORE One deutlich besser beherrschbar als offen. Dämpfe ablüften."},
- {id:"TPU",full:"Thermoplastisches Polyurethan",color:"#c2417a",nozzle:"220–240",bed:"45–60",tg:"flexibel",enc:"nein",
+ {id:"TPU",full:"Thermoplastisches Polyurethan",color:"#c2417a",nozzle:"220–260",bed:"40–85",tg:"flexibel",enc:"nein",
   r:{str:1,tough:5,heat:2,uv:3,flex:5,ease:2},moist:4,price:2,
   sum:"Gummiartig und elastisch, meist Shore 95A. Sehr abriebfest, dämpft Stösse, druckt aber langsam.",
   good:["Dämpfer, Füsse, Puffer, Dichtungen","Handyhüllen, Schutzkappen","Reifen, Griffe, flexible Scharniere"],
   bad:["Steife oder massgenaue Teile","Schnelle Drucke","Teile mit vielen Rückzügen"],
   tips:["Langsam drucken (etwa 20–40 mm/s volumetrisch begrenzt)","Rückzug minimal halten","Trocken lagern, zieht Feuchtigkeit"],
   core:"Kammer offen lassen wie bei PLA. Weichere TPUs (85A und weniger) sind im Direktextruder machbar, aber noch langsamer zu drucken."},
- {id:"PC",full:"Polycarbonat",color:"#6ab0c9",nozzle:"270–290",bed:"110–120",tg:"~145 °C",enc:"ja",
+ {id:"PC",full:"Polycarbonat",color:"#6ab0c9",nozzle:"270–275",bed:"100–115",tg:"~145 °C",enc:"ja",
   r:{str:5,tough:5,heat:5,uv:3,flex:2,ease:1},moist:4,price:2,
   sum:"Sehr fest, schlagzäh und hitzebeständig. Anspruchsvoll: braucht hohe Temperaturen und verzieht stark.",
   good:["Hoch belastete technische Teile","Teile nahe an Wärmequellen","Transparente, robuste Abdeckungen"],
   bad:["Einsteiger-Drucke","Grosse Teile ohne gute Haftung","Feuchtes Filament (Blasen, Schwäche)"],
   tips:["Vorher gründlich trocknen","Haftmittel / Klebestift auf dem Blech","Leichter zu drucken: PC-Blends wie PC-ABS oder PC Blend"],
   core:"Liegt am oberen Limit des Druckers (Düse bis 290 °C). Kammer lange vorheizen; ein PC-Blend ist meist die bessere Wahl."},
- {id:"PA",full:"Polyamid (Nylon)",color:"#e8e3d4",nozzle:"260–290",bed:"90–110",tg:"~70–80 °C (nass niedriger)",enc:"ja",
+ {id:"PA",full:"Polyamid (Nylon)",color:"#e8e3d4",nozzle:"240–285",bed:"70–115",tg:"~70–80 °C (nass niedriger)",enc:"ja",
   r:{str:4,tough:5,heat:3,uv:3,flex:3,ease:2},moist:5,price:3,
   sum:"Extrem zäh, verschleissfest und gleitfähig. Zieht aber sehr schnell Wasser und ändert dabei seine Eigenschaften.",
   good:["Zahnräder, Lager, Gleitteile","Scharniere, Schnappverbindungen","Werkzeug- und Maschinenteile"],
   bad:["Ungetrocknet drucken","Hohe Massgenauigkeit (Feuchte-Quellung)","Teile ohne Gehäuse"],
-  tips:["Immer trocknen und aus der Trockenbox drucken","Klebestift auf PEI","Gefüllte Varianten (PA-CF, PA-GF) verziehen weniger"],
+  tips:["Immer trocknen und aus der Trockenbox drucken","PA-Nylon-Blech ohne Kleber; nie auf glattem PEI","Gefüllte Varianten (PA-CF, PA-GF) verziehen weniger"],
   core:"Geschlossen und vorgeheizt drucken. Direkt aus der Trockenbox führen, sonst knistert und blubbert es an der Düse."},
- {id:"CF / GF",full:"Faserverstärkte Composites (PLA-, PETG-, PA-CF/GF)",color:"#3a3d44",nozzle:"je Basis +5–10",bed:"je Basis",tg:"je Basis, meist höher",enc:"je Basis",
+ {id:"CF / GF",full:"Faserverstärkte Composites (PLA-, PETG-, PA-CF/GF)",color:"#3a3d44",nozzle:"225–290",bed:"40–120",tg:"je Basis, meist höher",enc:"je Basis",
   r:{str:5,tough:3,heat:4,uv:4,flex:1,ease:3},moist:4,price:3,
   sum:"Basis-Kunststoff mit Kohle- oder Glasfasern. Deutlich steifer, verzieht weniger, matte Oberfläche. Abrasiv!",
   good:["Steife Strukturteile, Rahmen, Drohnen","Vorrichtungen und Lehren","Teile, die sich nicht verziehen dürfen"],
   bad:["Messingdüse (wird in kurzer Zeit ausgeschliffen)","Teile, die sich biegen sollen","Sehr feine Düsen (0,25 mm verstopft)"],
-  tips:["Gehärtete Düse verwenden (z. B. ObXidian), 0,4 oder 0,6 mm","Schichthaftung oft schwächer als beim Basismaterial","Trocknen empfohlen, auch bei PLA-CF"],
+  tips:["Gehärtete Düse verwenden (z. B. ObXidian), 0,4 oder 0,6 mm. Auch Glow-in-the-dark-Filament ist abrasiv","Schichthaftung oft schwächer als beim Basismaterial","Trocknen empfohlen, auch bei PLA-CF"],
   core:"Kammer-Einstellung richtet sich nach dem Basismaterial: PLA-CF offen, PA-CF geschlossen und vorgeheizt."},
- {id:"PP",full:"Polypropylen",color:"#b8c46a",nozzle:"230–250",bed:"80–100",tg:"~100 °C (weich)",enc:"empfohlen",
+ {id:"PP",full:"Polypropylen",color:"#b8c46a",nozzle:"220–245",bed:"70–100",tg:"~100 °C (weich)",enc:"empfohlen",
   r:{str:2,tough:5,heat:3,uv:3,flex:4,ease:1},moist:1,price:2,
   sum:"Leicht, chemisch fast unverwüstlich und ideal für Filmscharniere. Haftet aber auf kaum einer Druckplatte.",
   good:["Filmscharniere, Deckel mit Klappe","Behälter für Chemikalien","Leichte, biegsame Teile"],
   bad:["PEI-Bleche (haftet nicht)","Steife Teile","Kleben (kaum möglich)"],
   tips:["Auf dem PP-Blech drucken, normale PEI-Bleche haften nicht","Grosser Brim","Stark schrumpfend, Masse kompensieren"],
   core:"Geschlossene Kammer hilft gegen Verzug. Unbedingt das PP-Blech verwenden; auf PEI haftet PP praktisch nicht."},
- {id:"HIPS",full:"High Impact Polystyrene",color:"#d9d2f2",nozzle:"230–245",bed:"100–110",tg:"~100 °C",enc:"ja",
+ {id:"HIPS",full:"High Impact Polystyrene",color:"#d9d2f2",nozzle:"225–255",bed:"100–110",tg:"~100 °C",enc:"nein",
   r:{str:2,tough:3,heat:3,uv:2,flex:2,ease:3},moist:2,price:2,
   sum:"Leichtes Material, vor allem bekannt als in Limonen auflösbares Stützmaterial für ABS.",
   good:["Lösliche Stützen für ABS/ASA","Leichte Gehäuse und Modelle","Teile zum Bemalen"],
   bad:["Stütze für PLA/PETG (Temperaturen passen nicht)","Belastete Teile","Outdoor"],
-  tips:["In D-Limonen auflösen (dauert Stunden)","Für Stützen ist ein Mehrmaterial-System nötig","Ähnliche Einstellungen wie ABS"],
-  core:"Druckt wie ABS: Kammer zu und vorheizen. Als Stützmaterial braucht es ein Mehrmaterial-Setup (z. B. MMU)."},
- {id:"PVA / BVOH",full:"Wasserlösliche Stützmaterialien",color:"#9fd4c9",nozzle:"200–220",bed:"55–60",tg:"~60–80 °C",enc:"nein",
+  tips:["In D-Limonen auflösen (dauert Stunden)","Für Stützen ist ein Mehrmaterial-System nötig","Haftet laut Prusa auf glattem PEI, strukturiert und Satin ohne Kleber"],
+  core:"Laut Prusa ist kein Gehäuse nötig; zusammen mit ABS/ASA gilt aber deren Kammer-Einstellung. Als Stützmaterial braucht es ein Mehrmaterial-Setup."},
+ {id:"PVA / BVOH",full:"Wasserlösliche Stützmaterialien",color:"#9fd4c9",nozzle:"195–215",bed:"60",tg:"~60–80 °C",enc:"nein",
   r:{str:1,tough:1,heat:1,uv:1,flex:2,ease:2},moist:5,price:3,
   sum:"Stützmaterial, das sich in Wasser auflöst. Ermöglicht komplexe Geometrien ohne Stützspuren.",
   good:["Stützen für PLA (PVA) bzw. PLA/PETG (BVOH)","Innenliegende Hohlräume, Überhänge","Bewegliche Print-in-Place-Teile"],
@@ -237,27 +237,27 @@ const M=[
   core:"Braucht ein Mehrmaterial-System. Im Druckraum offen drucken wie PLA, Spule unbedingt trocken führen."}
 ];
 const SHEETS=[
- {k:"KM",code:"KM-25",name:"Glattes PEI",n:2,note:"Höchste Haftung, glänzende Unterseite. Nie TPU oder PETG ohne Klebestift: das Material kann Stücke aus der PEI-Schicht reissen."},
- {k:"SK",code:"SK-25",name:"Strukturiert (Textured)",n:1,note:"Pulverbeschichtet, robust. Teile lösen sich nach dem Abkühlen fast von selbst. Unterseite mit Strukturmuster."},
- {k:"BT",code:"BT-25",name:"Satin",n:1,note:"Allrounder mit feiner, matter Unterseite. PLA und PETG ohne Kleber; TPU nur mit Klebestift."},
- {k:"LT",code:"LT-25",name:"PA Nylon",n:1,note:"Spezialblech für Polyamide (und PETG). Ohne Kleber drucken, nur mit Wasser und Spülmittel reinigen: kein Alkohol, kein Aceton, nicht kratzfest."},
- {k:"MS",code:"MS-25",name:"PP",n:1,note:"Nur für Polypropylen und PP-CF. Andere Materialien haften nicht."}
+ {k:"KM",code:"KM-25",name:"Glattes PEI",n:2,note:"Höchste Haftung, glänzende Unterseite. PETG, TPU, ASA, ABS und PC nur mit Klebestift als Trennschicht, sonst kann das Material Stücke aus dem PEI reissen. Kein Nylon."},
+ {k:"SK",code:"SK-25",name:"Strukturiert (Textured)",n:1,note:"Pulverbeschichtet, robust. Teile lösen sich nach dem Abkühlen fast von selbst. ASA, ABS, PC und Nylon mit Klebestift."},
+ {k:"BT",code:"BT-25",name:"Satin",n:1,note:"Der vielseitigste Allrounder: PLA, PETG, ASA, ABS, PC, HIPS und PVA ohne Kleber. Nylon und TPU nur mit Klebestift."},
+ {k:"LT",code:"LT-25",name:"PA Nylon",n:1,note:"Spezialblech für Polyamide; PETG geht auch. Ohne Kleber drucken, nur mit Wasser und Spülmittel reinigen: kein Alkohol, kein Aceton, nicht kratzfest."},
+ {k:"MS",code:"MS-25",name:"PP",n:1,note:"Für Polypropylen gemacht. Laut Prusa haften auch PETG, ASA, ABS, PC, TPU, Nylon und PVA. PLA nur mit dem Vermerk «zuerst mit PP drucken»."}
 ];
-// r: 3 = erste Wahl · 2 = geht · 1 = nur mit Klebestift / Vorsicht · 0 = nicht verwenden
+// r: 3 = erste Wahl · 2 = geht ohne Hilfsmittel · 1 = mit Klebestift o. Ä. / eingeschränkt · 0 = nicht verwenden. Basis: Prusa-Materialtabelle
 const PLATES={
- "PLA":{KM:[3,"Beste Haftung, glatte Unterseite"],BT:[3,"Matte Unterseite, kein Kleber"],SK:[2,"Kleine Teile ev. mit Brim"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "PETG":{SK:[3,"Löst sich nach dem Abkühlen sauber"],BT:[3,"Ohne Kleber, glattere Unterseite"],LT:[2,"Von Prusa als kompatibel gelistet"],KM:[1,"Nur mit Klebestift als Trennschicht"],MS:[0,"Haftet nicht"]},
- "ASA":{KM:[3,"Beste Haftung; bei grossen Flächen Klebestift"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Weniger Haftung: Brim, ev. Draft Shield"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "ABS":{KM:[3,"Beste Haftung; bei grossen Flächen Klebestift"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Weniger Haftung: Brim, ev. Draft Shield"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "TPU":{SK:[3,"Erste Wahl, löst sich gut"],BT:[1,"Nur mit Klebestift"],KM:[1,"Nur mit Klebestift, sonst reisst es PEI aus"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "PC":{SK:[3,"Mit Klebestift als Trennschicht"],KM:[2,"Mit Klebestift als Trennschicht"],BT:[2,"Brim; bei häufigem PC Klebestift"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "PA":{LT:[3,"Dafür gemacht, ohne Kleber"],SK:[2,"Mit Klebestift"],KM:[1,"Mit Klebestift, schwächere Haftung"],BT:[1,"Nur mit Klebestift, nicht empfohlen"],MS:[0,"Haftet nicht"]},
- "CF / GF":{SK:[3,"PLA-CF, PETG-CF (PETG-CF mit Kleber auf PEI)"],LT:[3,"PA-CF / PA-GF ohne Kleber"],BT:[2,"PLA-CF, PETG-CF"],KM:[2,"PLA-CF; PETG-CF nur mit Klebestift"],MS:[2,"Nur PP-CF"]},
- "PP":{MS:[3,"Dafür gemacht"],BT:[2,"Laut Prusa möglich, kleinere Teile"],SK:[0,"Haftet nicht"],KM:[0,"Haftet nicht"],LT:[0,"Haftet nicht"]},
- "HIPS":{KM:[3,"Wie ABS, das Hauptmaterial bestimmt"],SK:[2,"Bei grossen Teilen Brim"],BT:[2,"Brim empfohlen"],LT:[0,"Nicht vorgesehen"],MS:[0,"Haftet nicht"]},
- "PVA / BVOH":{KM:[3,"Mit PLA: wie das Hauptmaterial"],BT:[3,"Mit PLA oder PETG"],SK:[2,"Mit PETG + BVOH"],LT:[0,"Nicht vorgesehen"],MS:[0,"Nicht vorgesehen"]}
+ "PLA":{KM:[3,"Beste Haftung, glatte Unterseite"],BT:[3,"Matte Unterseite, kein Kleber"],SK:[2,"Ohne Kleber; kleine Teile ev. mit Brim"],MS:[1,"Prusa: nur «zuerst mit PP drucken»"],LT:[0,"Laut Prusa nicht geeignet"]},
+ "PETG":{SK:[3,"Löst sich nach dem Abkühlen sauber"],BT:[3,"Ohne Kleber, glattere Unterseite"],LT:[2,"Geeignet; vorher mit Wasser reinigen"],MS:[2,"Laut Prusa geeignet"],KM:[1,"Nur mit Klebestift als Trennschicht"]},
+ "ASA":{BT:[3,"Ohne Kleber"],MS:[2,"Laut Prusa geeignet"],SK:[1,"Mit Klebestift"],KM:[1,"Mit Klebestift"],LT:[0,"Laut Prusa nicht geeignet"]},
+ "ABS":{BT:[3,"Ohne Kleber"],MS:[2,"Laut Prusa geeignet"],SK:[1,"Mit Klebestift"],KM:[1,"Mit Klebestift"],LT:[0,"Laut Prusa nicht geeignet"]},
+ "TPU":{SK:[3,"Erste Wahl, löst sich gut"],MS:[2,"Laut Prusa geeignet"],KM:[1,"Nur mit Klebestift, sonst reisst es PEI aus"],BT:[1,"Tabelle ohne Angabe; Satin-Artikel: mit Klebestift"],LT:[0,"Keine Angabe"]},
+ "PC":{BT:[3,"Ohne Kleber; bei häufigem PC Klebestift zum Schutz"],MS:[2,"Laut Prusa geeignet"],SK:[1,"Mit Klebestift"],KM:[1,"Mit Klebestift"],LT:[0,"Laut Prusa nicht geeignet"]},
+ "PA":{LT:[3,"Dafür gemacht, ohne Kleber"],MS:[2,"Laut Prusa geeignet"],SK:[1,"Mit Klebestift"],BT:[1,"Mit Klebestift"],KM:[0,"Laut Prusa nicht geeignet"]},
+ "CF / GF":{SK:[3,"PLA-CF, PETG-CF"],LT:[3,"PA-CF / PA-GF ohne Kleber"],BT:[2,"PLA-CF, PETG-CF"],KM:[2,"PLA-CF; PETG-CF nur mit Klebestift"],MS:[2,"PP-CF; sonst wie Basismaterial"]},
+ "PP":{MS:[3,"Dafür gemacht"],KM:[1,"Nur mit PP-Klebeband"],BT:[1,"Tabelle ohne Angabe"],SK:[0,"Laut Prusa nicht geeignet"],LT:[0,"Laut Prusa nicht geeignet"]},
+ "HIPS":{KM:[3,"Ohne Kleber"],SK:[2,"Ohne Kleber"],BT:[2,"Ohne Kleber"],LT:[0,"Laut Prusa nicht geeignet"],MS:[0,"Laut Prusa nicht geeignet"]},
+ "PVA / BVOH":{KM:[3,"Ohne Kleber; Hauptmaterial beachten"],BT:[3,"Ohne Kleber"],SK:[2,"Ohne Kleber"],MS:[2,"Laut Prusa geeignet"],LT:[0,"Laut Prusa nicht geeignet"]}
 };
-const RL=["nicht","mit Kleber","geht","erste Wahl"];
+const RL=["nicht","eingeschränkt","geht","erste Wahl"];
 const bestSheets=id=>Object.entries(PLATES[id]).filter(([k,v])=>v[0]===3).map(([k])=>k);
 const COLS=[
  {k:"str",l:"Festigkeit"},{k:"tough",l:"Zähigkeit"},{k:"heat",l:"Temperatur"},
@@ -333,7 +333,7 @@ function renderSheets(){
       <h3>${sh.name}</h3><p>${sh.note}</p>
       <div class="grp"><span>Erste Wahl</span><div>${by(3)}</div></div>
       <div class="grp"><span>Geht auch</span><div>${by(2)}</div></div>
-      <div class="grp"><span>Nur mit Klebestift</span><div>${by(1)}</div></div></article>`}).join("");
+      <div class="grp"><span>Mit Klebestift / eingeschränkt</span><div>${by(1)}</div></div></article>`}).join("");
   document.querySelectorAll(".mchip").forEach(b=>b.onclick=()=>{sel=b.dataset.id;renderBody();renderDetail();document.getElementById("detail").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"nearest"})});
 }
 function renderAll(){renderUses();renderHead();renderBody();renderDetail()}
